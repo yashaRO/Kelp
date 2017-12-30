@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import KelpLogo from './images/Kelp_Logo.png';
+import BusinessCard from './components/BusinessCard'
+import KelpLogo from './images/kelp_logo_face.png';
 import './App.css';
 
 class App extends Component {
@@ -21,6 +22,14 @@ class App extends Component {
     this.setState(obj)
   }
 
+  renderBusinesses = () => {
+    let arr = new Array(3).fill(true)
+    
+    return arr.map((x,i) => {
+      return <BusinessCard key={i} imgSrc={KelpLogo}/>
+    })    
+  }
+
   render() {
     return (
       <div className="App">
@@ -40,28 +49,12 @@ class App extends Component {
             </div> 
           </div>
         </header>
-        <div className="frontpage-card-gallery">
-          <div className="card" style={{width: '20rem'}}>
-            <img className="card-img-top" src={KelpLogo} alt="Card image cap" />
-            <div className="card-body">
-              <h4 className="card-title">Card title</h4>
-              <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="#" className="btn btn-primary">Go somewhere</a>
-            </div>
-          </div><div className="card" style={{width: '20rem'}}>
-          <img className="card-img-top" src={KelpLogo} alt="Card image cap" />
-          <div className="card-body">
-            <h4 className="card-title">Card title</h4>
-            <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" className="btn btn-primary">Go somewhere</a>
+        <div className="container">
+          <div className="row">
+            {this.renderBusinesses()}
           </div>
-          </div><div className="card" style={{width: '20rem'}}>
-          <img className="card-img-top" src={KelpLogo} alt="Card image cap" />
-          <div className="card-body">
-            <h4 className="card-title">Card title</h4>
-            <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" className="btn btn-primary">Go somewhere</a>
-          </div>
+          <div className="row">
+            {this.renderBusinesses()}
           </div>
         </div>
       </div>
