@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import BusinessCard from './components/BusinessCard'
 import KelpLogo from './images/kelp_logo_face.png';
 import SearchButton from './images/cutlery.png'
 import './App.css';
 
-class SearchScreen extends Component {
+class Business extends Component {
   constructor() {
     super()
     this.state = {
@@ -16,7 +15,7 @@ class SearchScreen extends Component {
   }
   
   componentDidMount = () => {
-    fetch('http://localhost:3007/search')
+    fetch('http://localhost:3007/business/' + this.props.match.params.id)
       .then((res)=> res.json())
       .then((resJson) => {
       this.setState({
@@ -32,21 +31,6 @@ class SearchScreen extends Component {
     let obj = {}
     obj[field] = e.target.value
     this.setState(obj)
-  }
-  
-  renderBusiness = (start, finish) => {
-//    let arr = new Array(3).fill(true)
-//    
-//    return arr.map((x,i) => {
-//      return <BusinessCard key={i} imgSrc={KelpLogo}/>
-//    }) 
-    if (!this.state.dataLoaded) {
-      return false
-    }
-    //state.businessData is actually an object with more data. It has an array in .businesses
-    return this.state.businessData.businesses.map((biz,i) => {
-      return <BusinessCard key={biz.id} bizData={biz} />
-    })
   }
 
   render() {
@@ -94,7 +78,7 @@ class SearchScreen extends Component {
             <div className="col-lg-12 col-sm-12">
               <div className="container">
                <div className="row">
-                {this.renderBusiness()}
+                
                 </div>
               </div>
             </div>
@@ -120,4 +104,4 @@ class SearchScreen extends Component {
   }
 }
 
-export default SearchScreen;
+export default Business;
