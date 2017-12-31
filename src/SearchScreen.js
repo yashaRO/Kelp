@@ -21,6 +21,7 @@ class SearchScreen extends Component {
       .then((resJson) => {
       this.setState({
         businessData: resJson,
+        dataCompleted: resJson.hasOwnProperty('businesses') ? true : false,
         dataLoaded: true
       });
       
@@ -44,6 +45,9 @@ class SearchScreen extends Component {
       return false
     }
     //state.businessData is actually an object with more data. It has an array in .businesses
+    if (!this.state.dataCompleted) {
+      return []
+    }
     return this.state.businessData.businesses.map((biz,i) => {
       return <BusinessCard key={biz.id} bizData={biz} />
     })
@@ -78,7 +82,14 @@ class SearchScreen extends Component {
               <div className="col-lg-12">Houston Tx > Restaurants</div>
             </div>
             <div className="row">
-              <div className="col-lg-12">TEXT PLACEHOLDER FOR BUTTONS??</div>
+              <div className="col-lg-12">
+                <div className='searchpage-results-price-buttons'>
+                  <button>$</button>
+                  <button>$$</button>
+                  <button>$$$</button>
+                  <button>$$$$</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

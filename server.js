@@ -6,7 +6,6 @@ const request = require('request');
 const cors = require('cors')
 const yelpApiKey = require('./keys/yelpKey.js').apiKey
 //const firebase = require('firebase')
-
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser())
 app.use(cors())
