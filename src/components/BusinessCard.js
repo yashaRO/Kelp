@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+//import KelpRatingRegular from './images/kelp_char_'
 
 class BusinessCard extends Component {
   render() {

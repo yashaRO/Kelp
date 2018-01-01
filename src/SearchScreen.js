@@ -8,7 +8,7 @@ class SearchScreen extends Component {
   constructor() {
     super()
     this.state = {
-      businessData: {},
+      businessesData: {},
       dataLoaded: false,
       find: '',
       where: ''
@@ -20,7 +20,7 @@ class SearchScreen extends Component {
       .then((res)=> res.json())
       .then((resJson) => {
       this.setState({
-        businessData: resJson.hasOwnProperty('businesses') ? resJson : {businesses:[]},
+        businessesData: resJson.hasOwnProperty('businesses') ? resJson : {businesses:[]},
         dataLoaded: true
       });
       
@@ -44,7 +44,7 @@ class SearchScreen extends Component {
       return false
     }
     //state.businessData is actually an object with more data. It has an array in .businesses
-    return this.state.businessData.businesses.map((biz,i) => {
+    return this.state.businessesData.businesses.map((biz,i) => {
       return <BusinessCard key={biz.id} bizData={biz} />
     })
   }

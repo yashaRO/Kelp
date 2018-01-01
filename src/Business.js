@@ -9,20 +9,22 @@ class Business extends Component {
     this.state = {
       businessData: {},
       dataLoaded: false,
+      kelpRating: '',
       find: '',
       where: ''
     }
   }
-  
+
   componentDidMount = () => {
-    fetch('http://localhost:3007/business/' + this.props.match.params.id)
+    let { params } = this.props.match;
+    fetch('http://localhost:3007/business/' + params.id)
       .then((res)=> res.json())
       .then((resJson) => {
       this.setState({
-        businessData: resJson.hasOwnProperty('businesses') ? resJson : {businesses:[]},
+        businessData: resJson.id === params.id ? resJson : {},
         dataLoaded: true
       });
-      
+
       console.log(resJson)
     })
   }
@@ -74,29 +76,51 @@ class Business extends Component {
           </div>
         </div>
         <div className="container">
-          <div className='row'>
-            <div className="col-lg-12 col-sm-12">
-              <div className="container">
-               <div className="row">
-                
-                </div>
+          <div className='row justify-content-center'>
+            <div className="col-lg-3">
+              <div className="card" style={{width: "100%"}}>
+                <ul className="list-group list-group-flush">
+                  <li className="list-group-item">Cras justo odio</li>
+                  <li className="list-group-item">Dapibus ac facilisis in</li>
+                  <li className="list-group-item">Vestibulum at eros</li>
+                </ul>
               </div>
             </div>
-            <div className="d-lg-none d-sm-none">
-              <div className="container">
-                <div className="row">
-                  <div className="col-lg-12">
-                    <div className="card">
-                      <div className="card-body">
-                        <h5 className="card-title">Special title treatment</h5>
-                        <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                        <a href="#" className="btn btn-primary">Go somewhere</a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            <div className="col-lg-3">
+              <div className="card" style={{width: "100%"}}>
+                <ul className="list-group list-group-flush">
+                  <li className="list-group-item">Cras justo odio</li>
+                  <li className="list-group-item">Dapibus ac facilisis in</li>
+                  <li className="list-group-item">Vestibulum at eros</li>
+                </ul>
               </div>
             </div>
+            <div className="col-lg-3">
+              <div className="card" style={{width: "100%"}}>
+                <ul className="list-group list-group-flush">
+                  <li className="list-group-item">Cras justo odio</li>
+                  <li className="list-group-item">Dapibus ac facilisis in</li>
+                  <li className="list-group-item">Vestibulum at eros</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div className='leave-review-section row justify-content-center'>
+            <form onSubmit={this.handleReviewSubmit}>
+              <div className="row justify-content-center">
+                <input type="radio" value='kelp-rating-1' checked={this.state.kelpRating === "kelp-rating-1"} onChange={(e) => this.setState({ kelpRating: e.target.value })}/>
+                <input type="radio" value='kelp-rating-2' checked={this.state.kelpRating === "kelp-rating-2"} onChange={(e) => this.setState({ kelpRating: e.target.value })}/>
+                <input type="radio" value='kelp-rating-3' checked={this.state.kelpRating === "kelp-rating-3"} onChange={(e) => this.setState({ kelpRating: e.target.value })}/>
+                <input type="radio" value='kelp-rating-4' checked={this.state.kelpRating === "kelp-rating-4"} onChange={(e) => this.setState({ kelpRating: e.target.value })}/>
+                <input type="radio" value='kelp-rating-5' checked={this.state.kelpRating === "kelp-rating-5"} onChange={(e) => this.setState({ kelpRating: e.target.value })}/>
+              </div>
+              <div className="row justify-content-center">
+                <input value={this.state.reviewComment} />
+              </div>
+              <div className="row justify-content-center">
+                <input type='submit' value='submit' />
+              </div>              
+            </form>
           </div>
         </div>
       </div>

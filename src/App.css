@@ -70,8 +70,8 @@
   font-size: .75rem;
 }
 .i-stars {
-  background: url(https://s3-media2.fl.yelpcdn.com/assets/srv0/yelp_design_web/9b34e39ccbeb/assets/img/stars/stars.png) no-repeat;
-  background-size: 132px 560px;
+  background: url('images/kelp_char_smallaw.png') no-repeat;
+  background-size: 72px 150px;
   display: inline-block;
   vertical-align: bottom;
 }
@@ -79,9 +79,13 @@
 /*small rating size is 14px 82px */
 /*mid rating size is 14px 82px */
 /*big rating size is 14px 82px */
+/* kelp ratings vary between 13 and 14px*/
 .i-stars-temp {
   width: 82px; /*small rating size is 14px 82px */
-  height: 14px;
-  background-position: 0 -532px;
+  height: 13px;
+  background-position: 0 -27px;
   overflow: hidden;
+}
+.leave-review-section {
+  margin-top: 30px;
 }
