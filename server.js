@@ -4,20 +4,28 @@ const express = require('express');
 const app = express();
 const request = require('request');
 const cors = require('cors')
+const apiKeys = require('./keys/apiKeys')
+
+//for Yelp
 const authObj = {
   'auth': {
-    'bearer': require('./keys/yelpKey.js').apiKey
+    'bearer': apiKeys.yelpKey
   }
 }
-  
+
 //const firebase = require('firebase')
 app.use(express.static(path.join(__dirname, 'build')));
-app.use(bodyParser())
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.text());// allows bodyParser to look at raw text
+app.use(bodyParser.json({ type: 'application/vnd.api+json'}))
 app.use(cors())
 
-app.get('/search', function(req, res) {
+app.post('/search', function(req, res) {
   
-  request('https://api.yelp.com/v3/businesses/search?term=food&location=77009', authObj, function(error, response, body) {
+  let location = req.body.location || 77009
+  let price = req.body.price ? 'price=' + req.body.price : ''
+  request('https://api.yelp.com/v3/businesses/search?term=food&location=' + location + price, authObj, function(error, response, body) {
     console.log('error:', error)
     console.log('statusCode:', response && response.statusCode)
     return res.type('json').send(body)
@@ -25,10 +33,15 @@ app.get('/search', function(req, res) {
 });
 
 app.get('/business/:id', function(req, res) {
-  
+
   request('https://api.yelp.com/v3/businesses/' + req.params.id, authObj, function(error, response, body) {
     console.log('error:', error)
-    console.log('statusCode:', response && response.statusCode)
+    console.log('statusCodell:', response && response.statusCode)
+    if (response.statusCode >= 400) {
+      console.log('bad')
+      return res.status(response.statusCode).send()
+    }
+    console.log('good')
     return res.type('json').send(body)
   })
   //res.status(200).send()

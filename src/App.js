@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { Link, Redirect } from 'react-router-dom'
 import BusinessCard from './components/BusinessCard'
+import KelpButton from './components/KelpButton'
 import KelpLogo from './images/kelp_logo_face.png';
 import './App.css';
 
@@ -8,33 +10,31 @@ class App extends Component {
     super()
     this.state = {
       find: '',
-      where: ''
+      where: '',
+      relocate: false
     }
-  }
-
-  ping = () => {
-    fetch('http://localhost:3007/ping').then((response) => response.json()).then((resJson)=> console.log(resJson)).catch((err)=>console.log(err, 'Server offline'))
   }
 
   handleChange = (e, field) => {
     let obj = {}
     obj[field] = e.target.value
     this.setState(obj)
+  } 
+  
+  handleSearch = () => {
+    this.setState({
+      relocate: true
+    })
   }
-
-  renderBusinesses = () => {
-    let arr = new Array(3).fill(true)
-    
-    return arr.map((x,i) => {
-      return <BusinessCard key={i} imgSrc={KelpLogo}/>
-    })    
-  }
-
+  
   render() {
+    if (this.state.relocate) {
+      return <Redirect push to={{pathname:'/search', state:{where:this.state.where}}} />
+    }
     return (
       <div className="App">
         <header className="frontpage-header">
-          <div className="container">
+          <div className="container align-items-center">
             <div className="row">
               <div className="col-lg-12 justify-content-center">
                 <img src={KelpLogo} className="frontpage-header-logo" alt="logo" />
@@ -44,22 +44,24 @@ class App extends Component {
               <div className="col-lg-12 justify-content-center">
                 <input className='frontpage-header-search' value={this.state.find} placeholder='What do you even want?' onChange={(event)=>this.handleChange(event, 'find')}></input>
                 <input className='frontpage-header-search' value={this.state.where} placeholder='Type in your zip code' onChange={(event)=>this.handleChange(event, 'where')}></input>
-                <button>Ok</button>
+                <KelpButton onClick={this.handleSearch}/>
               </div>
             </div> 
           </div>
         </header>
-        <div className="container">
-          <div className="row">
-            {this.renderBusinesses()}
-          </div>
-          <div className="row">
-            {this.renderBusinesses()}
-          </div>
-        </div>
       </div>
     );
   }
 }
 
 export default App;
+
+
+//<div className="container">
+//          <div className="row">
+//            {this.renderBusinesses()}
+//          </div>
+//          <div className="row">
+//            {this.renderBusinesses()}
+//          </div>
+//        </div>

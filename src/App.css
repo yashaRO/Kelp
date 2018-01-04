@@ -20,8 +20,13 @@
 }
 .frontpage-header {
   padding-top: 30px;
-  height: 570px;
+  height: 100%;
   background-color: limegreen;
+  position:absolute;
+  left:0;
+  right:0;
+  top: 0;
+  bottom: 0;
 }
 .frontpage-header-logo {
   margin: 3rem 0px;
@@ -33,7 +38,6 @@
   height: 100px;
   background-color: limegreen;
   background-size: cover;
-  padding-top: 10px;
 }
 .searchpage-header-logo {
   width: 5rem;
@@ -53,6 +57,15 @@
   background-color: #f5f5f5;
   height: 150px;
   padding: 10px 0px;
+}
+.searchpage-results-price-buttons > button {
+  border-radius: 8px;
+  border-color: limegreen;
+  margin: 0 5px;
+}
+.buttonPressed {
+  background-color: limegreen;
+  border-style: ridge;
 }
 .card-image-top-kelp {
   height: 198px;
@@ -88,4 +101,36 @@
 }
 .leave-review-section {
   margin-top: 30px;
+}
+.review-radio {
+  margin: 0 5px;
+}
+.review-textarea {
+  border: 3px inset;
+  margin-top: 20px;
+  resize: none;
+  height: 100px;
+  width: 500px;
+  overflow: auto;
+}
+.isClosed {
+  background-color: rgba(255, 0, 0, 0.31);
+}
+.isOpen {
+  background-color: rgba(20, 255, 0, 0.31);
+}
+.bizPage-header {
+  background-color: #f5f5f5;
+  padding: 10px 0px;
+}
+.bizPageHeaderImg {
+  min-height:400px;
+  max-height: 400px;
+  width: 100%
+}
+.mapss {
+  height: 350px; 
+}
+.wdyw, .wdywzip {
+ font-weight: bold;
 }
