@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import BusinessCard from './components/BusinessCard'
-import KelpLogo from './images/kelp_logo_face.png';
 import KelpButton from './components/KelpButton'
+import MainHeader from './components/MainHeader'
 import './App.css';
 
 class SearchScreen extends Component {
@@ -16,23 +16,25 @@ class SearchScreen extends Component {
       lastButtonPressed: null
     }
   }
-  
+
   componentWillMount = () => {
     var where, find;
     if (typeof(this.props.location.state) == 'undefined') {
       where = '77009'
-      find: 'food'
+      find= 'food'
+      this.setState({
+        where: '77009',
+        find: 'food'
+      })
+    } else {
+      if (typeof(this.props.location.state.where) == 'undefined') {
+        this.setState({where:'77009'})
+      }
+      if (typeof(this.props.location.state.find) == 'undefined') {
+        this.setState({find:'food'})
+      }
     }
-    if (typeof(this.props.location.state.where) == 'undefined') {
-      where = '77009'
-    }
-    if (typeof(this.props.location.state.find) == 'undefined') {
-      find = 'food'
-    }
-    this.setState({
-      where: where || this.props.location.state.where,
-      find:  find || this.props.location.state.find
-    })
+
   }
 
   componentDidMount = () => {
@@ -60,7 +62,7 @@ class SearchScreen extends Component {
 
   handleFilter = (e, field) => {
     var field = field || null
-    
+
     fetch('/api/search', {method: 'POST', headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
@@ -77,7 +79,7 @@ class SearchScreen extends Component {
       console.log(resJson)
     })
   }
-  
+
   renderPriceFilterButtons = () => {
     let arr = [['1','$'],['2','$$'],['3','$$$'],['4','$$$$']]
     return arr.map((item, i) => {
@@ -101,18 +103,7 @@ class SearchScreen extends Component {
     }
     return (
       <div className="App">
-        <header className="searchpage-header">
-          <div className="container" style={{height:'100%'}}>
-            <div className="row align-items-center" style={{height:'100%'}}>
-              <div className="col-lg-12 justify-content-center">
-                <img src={KelpLogo} className="searchpage-header-logo" alt="logo" />
-                <input className='searchpage-header-search' value={this.state.find} placeholder='What do you even want?' onChange={(event)=>this.handleChange(event, 'find')} />
-                <input className='searchpage-header-search' value={this.state.where} placeholder='Type in your zip code' onChange={(event)=>this.handleChange(event, 'where')} />
-                <KelpButton onClick={this.handleFilter}/>
-              </div>
-            </div>
-          </div>
-        </header>
+        <MainHeader class='searchpage-header' find={this.state.find} where={this.state.where} onClick={this.handleFilter} onChange={this.handleChange}/>
         <div className="searchpage-results-header">
           <div className="container">
             <div className="row">
@@ -133,21 +124,6 @@ class SearchScreen extends Component {
               <div className="container">
                 <div className="row">
                   {this.renderBusiness()}
-                </div>
-              </div>
-            </div>
-            <div className="d-lg-none d-sm-none">
-              <div className="container">
-                <div className="row">
-                  <div className="col-lg-12">
-                    <div className="card">
-                      <div className="card-body">
-                        <h5 className="card-title">Special title treatment</h5>
-                        <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                        <a href="#" className="btn btn-primary">Go somewhere</a>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>

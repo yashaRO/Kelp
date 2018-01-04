@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import SearchButton from '../images/cutlery.png'
-import '../App.css';
 
 class KelpButton extends Component {
   render() {

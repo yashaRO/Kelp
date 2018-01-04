@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import firebase from 'firebase'
 import { Redirect } from 'react-router-dom';
 import axios from 'axios'
-import KelpLogo from './images/kelp_logo_face.png';
-import SearchButton from './images/cutlery.png'
+import MainHeader from './components/MainHeader'
+import CardList from './components/CardList'
+import StaticGMap from './components/StaticGMap'
 import './App.css';
 
 
@@ -47,38 +48,6 @@ class Business extends Component {
     })
 
   }
-  // converts military time
-  _parseTime = (x) => {
-    let converted = '';
-    let mod = parseInt(x, 10) < 1200 ? ' am' : ' pm';
-    let arr = x.match(/\d{2}/g);
-    if (arr.length < 2) {
-      return false;
-    }
-    //if hour is 0 then change to 12, if hour is 1200-2300 subtract 12.
-    converted += !parseInt(arr[0], 10)
-      ? '12:'
-    : parseInt(arr[0], 10) >= 13 
-      ? parseInt(arr[0], 10) - 12 + ':'
-    : parseInt(arr[0], 10) + ':';
-
-    converted += parseInt(arr[1], 10) < 10 ? '0' + parseInt(arr[1], 10) : parseInt(arr[1], 10);
-    return converted + mod;
-  }
-
-  //runs batch parseTime on schedule/hours
-  _batchParseTime = (batch) => {
-    let arr = new Array(7).fill(false)
-    batch.forEach((obj)=> {
-      if (arr[obj.day]) {
-        arr[obj.day].push(this._parseTime(obj.start) + ' - ' + this._parseTime(obj.end))
-        return true;
-      }
-      arr[obj.day] = [this._parseTime(obj.start) + ' - ' +  this._parseTime(obj.end)]
-      return true
-    })
-    return arr
-  }
 
   handleChange = (e, field) => {
     let obj = {}
@@ -97,31 +66,16 @@ class Business extends Component {
       review: this.state.reviewComment
     })
   }
-
-  renderSchedule = () => {
-    let { hours } = this.state.businessData
-    let today = new Date().getDay()
-    let dOw = ['Sun','Mon','Tues','Wed','Thur','Fri','Sat']
-    let dOWHours = this._batchParseTime(hours[0].open)
-    let isOpen = hours[0].is_open_now ? 'isOpen' : 'isClosed'
-    return dOw.map((day,i) => {
-      return (
-        <tr className={ i === today ? isOpen : ''} key={i} style={{}}>
-          <th>{day}</th>
-          <td>{dOWHours[i] || 'Closed'}</td>
-        </tr>
-      )
-    })
-  }
+  
   renderRadios = (amount) => {
     let arr = new Array(amount).fill(true)
     return arr.map((radio, i) => {
       let j = ++i
       return (
-        <div className="radio">
+        <div className="radio" key={i}>
           <label>
             <input className='review-radio' type="radio" value={'kelp-rating-' + j} checked={this.state.kelpRating === ("kelp-rating-" + j)} onChange={(e) => this.setState({ kelpRating: e.target.value })} required/>
-            {i + 1}
+            {j}
           </label>
         </div>
       )
@@ -145,18 +99,6 @@ class Business extends Component {
     })
   }
 
-  renderMap = () => {
-    let { coordinates } = this.state.businessData
-    let center = [coordinates.latitude, coordinates.longitude].toString() // [lat, long]
-    let zoom = 15
-    let size = '250x250'
-    let color = 'red'
-    let apiKey = 'AIzaSyByynRDUc_o6syfblD66jQlnEzIB8dRWTM'
-    let url = `https://maps.googleapis.com/maps/api/staticmap?center=${center}&zoom=${zoom}&size=${size}&maptype=roadmap&markers=color:${color}%7C${center}&key=${apiKey}`
-
-    return <img className="card-img-top" src={url} alt="Card image cap"/>
-  }
-
   render() {
 
     if (this.state.err) {
@@ -169,19 +111,7 @@ class Business extends Component {
 
     return (
       <div className="App">
-        <header className="searchpage-header">
-          <div className="container" style={{height:'100%'}}>
-            <div className="row align-items-center" style={{height:'100%'}}>
-              <div className="col-lg-12 justify-content-center">
-                <img src={KelpLogo} className="searchpage-header-logo" alt="logo" />
-                <input className='searchpage-header-search' value={this.state.find} placeholder='What do you even want?' onChange={(event)=>this.handleChange(event, 'find')} disabled></input>
-                <input className='searchpage-header-search' value={this.state.where} placeholder='Type in your zip code' onChange={(event)=>this.handleChange(event, 'where')} disabled></input>
-                <button className='searchpage-header-search-button' style={{backgroundColor:'green'}}><img src={SearchButton} alt='Search'/></button>
-                <div style={{display:'none'}}>Icons made by <a href="http://www.freepik.com" rel='noopener noreferrer' title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" rel='noopener noreferrer'title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" rel='noopener noreferrer' title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
-              </div>
-            </div>
-          </div>
-        </header>
+        <MainHeader class='searchpage-header' find={this.state.find} where={this.state.where} onClick={this.handleFilter} onChange={this.handleChange} />
         <div className="bizPage-header">
           <div className="container-fluid">
             <div className="row">
@@ -198,17 +128,7 @@ class Business extends Component {
           <div className='row justify-content-center'>
             <div className="col-lg-3">
               <div className="card" style={{width: "100%"}}>
-                <table className='table'>
-                  <thead>
-                    <tr>
-                      <th>Day</th>
-                      <th>Hours</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {this.renderSchedule()}
-                  </tbody>
-                </table>
+                <CardList theadData={['Days','Hours']} tbodyData={this.state.businessData.hours} />
               </div>
             </div>
             <div className="col-lg-3" style={{}}>
@@ -223,7 +143,7 @@ class Business extends Component {
             </div>
             <div className="col-lg-3">
               <div className="card" style={{width: "100%"}}>
-                {this.renderMap()}
+                <StaticGMap coordinates={this.state.businessData.coordinates} />
                 <div className="card-body">
                   <h6 className="card-title" style={{fontWeight:'bold', margin:'0'}}>{this.state.businessData.location.address1}</h6>
                 </div>
