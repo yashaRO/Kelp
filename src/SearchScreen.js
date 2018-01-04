@@ -31,7 +31,7 @@ class SearchScreen extends Component {
   }
 
   componentDidMount = () => {
-    fetch('http://localhost:3007/api/search', {method: 'POST', headers: {
+    fetch('/api/search', {method: 'POST', headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     }, body: JSON.stringify({location: this.state.where})})
@@ -56,7 +56,7 @@ class SearchScreen extends Component {
   handleFilter = (e, field) => {
     var field = field || null
     
-    fetch('http://localhost:3007/api/search', {method: 'POST', headers: {
+    fetch('/api/search', {method: 'POST', headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     }, body: JSON.stringify({price:field, location: this.state.where})})

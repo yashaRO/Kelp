@@ -25,22 +25,7 @@ class Business extends Component {
   componentDidMount = () => {
     let { params } = this.props.match;
     //  //fetch acts like a complete POS with this route if param is 'search'. Had to use axios
-    //    fetch('http://localhost:3007/business/' + params.id)
-    //      .then((res)=> {
-    //        return res.json()
-    //    })
-    //      .then((resJson) => {
-    //      this.setState({
-    //        businessData: resJson.id === params.id ? resJson : {},
-    //        dataLoaded: true
-    //      });
-    //
-    //      console.log(resJson)
-    //    })
-    //      .catch((err) => {
-    //      this.setState({err : true})
-    //    })
-    axios.get('http://localhost:3007/api/business/' + params.id)
+    axios.get('/api/business/' + params.id)
       .then((res) => {
       this.setState({
         businessData: res.data.id === params.id ? res.data : {},
