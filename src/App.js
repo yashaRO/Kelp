@@ -29,7 +29,7 @@ class App extends Component {
   
   render() {
     if (this.state.relocate) {
-      return <Redirect push to={{pathname:'/search', state:{where:this.state.where}}} />
+      return <Redirect push to={{pathname:'/search', state:{find: this.state.find, where:this.state.where}}} />
     }
     return (
       <div className="App">

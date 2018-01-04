@@ -18,29 +18,34 @@ class SearchScreen extends Component {
   }
   
   componentWillMount = () => {
+    var where, find;
     if (typeof(this.props.location.state) == 'undefined') {
-      this.setState({
-        where: '77009'
-      })
+      where = '77009'
+      find: 'food'
     }
-    else {
-      this.setState({
-        where: this.props.location.state.where
-      })
+    if (typeof(this.props.location.state.where) == 'undefined') {
+      where = '77009'
     }
+    if (typeof(this.props.location.state.find) == 'undefined') {
+      find = 'food'
+    }
+    this.setState({
+      where: where || this.props.location.state.where,
+      find:  find || this.props.location.state.find
+    })
   }
 
   componentDidMount = () => {
     fetch('/api/search', {method: 'POST', headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-    }, body: JSON.stringify({location: this.state.where})})
+    }, body: JSON.stringify({term: this.state.find, location: this.state.where})})
       .then((res)=> res.json())
       .then((resJson) => {
       this.setState({
         businessesData: resJson.hasOwnProperty('businesses') ? resJson : {businesses:[]},
         dataLoaded: true,
-        lastSearchQuery: this.state.where
+        lastSearchQuery: [this.state.find, this.state.where]
       });
 
       console.log(resJson)
@@ -59,14 +64,14 @@ class SearchScreen extends Component {
     fetch('/api/search', {method: 'POST', headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-    }, body: JSON.stringify({price:field, location: this.state.where})})
+    }, body: JSON.stringify({term: this.state.find, price:field, location: this.state.where})})
       .then((res)=> res.json())
       .then((resJson) => {
       this.setState({
         businessesData: resJson.hasOwnProperty('businesses') ? resJson : {businesses:[]},
         dataLoaded: true,
         lastButtonPressed: field,
-        lastSearchQuery: this.state.where
+        lastSearchQuery: [this.state.find, this.state.where]
       });
 
       console.log(resJson)
@@ -81,11 +86,6 @@ class SearchScreen extends Component {
   }
 
   renderBusiness = (start, finish) => {
-    //    let arr = new Array(3).fill(true)
-    //    
-    //    return arr.map((x,i) => {
-    //      return <BusinessCard key={i} imgSrc={KelpLogo}/>
-    //    }) 
     if (!this.state.dataLoaded) {
       return false
     }
@@ -106,8 +106,8 @@ class SearchScreen extends Component {
             <div className="row align-items-center" style={{height:'100%'}}>
               <div className="col-lg-12 justify-content-center">
                 <img src={KelpLogo} className="searchpage-header-logo" alt="logo" />
-                <input className='searchpage-header-search' value={this.state.find} placeholder='What do you even want?' onChange={(event)=>this.handleChange(event, 'find')} disabled></input>
-                <input className='searchpage-header-search' value={this.state.where} placeholder='Type in your zip code' onChange={(event)=>this.handleChange(event, 'where')}></input>
+                <input className='searchpage-header-search' value={this.state.find} placeholder='What do you even want?' onChange={(event)=>this.handleChange(event, 'find')} />
+                <input className='searchpage-header-search' value={this.state.where} placeholder='Type in your zip code' onChange={(event)=>this.handleChange(event, 'where')} />
                 <KelpButton onClick={this.handleFilter}/>
               </div>
             </div>
@@ -116,7 +116,7 @@ class SearchScreen extends Component {
         <div className="searchpage-results-header">
           <div className="container">
             <div className="row">
-              <div className="col-lg-12" style={{fontSize:'30px'}}>Showing <span className='wdyw'>{this.state.find.toUpperCase()}</span> in <span className='wdywzip'>{this.state.lastSearchQuery}</span></div>
+              <div className="col-lg-12" style={{fontSize:'30px'}}>Showing <span className='wdyw'>{this.state.lastSearchQuery[0].toUpperCase()}</span> in <span className='wdywzip'>{this.state.lastSearchQuery[1]}</span></div>
             </div>
             <div className="row" style={{marginTop:'20px'}}>
               <div className="col-lg-12">
