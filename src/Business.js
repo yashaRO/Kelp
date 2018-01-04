@@ -40,7 +40,7 @@ class Business extends Component {
     //      .catch((err) => {
     //      this.setState({err : true})
     //    })
-    axios.get('http://localhost:3007/business/' + params.id)
+    axios.get('http://localhost:3007/api/business/' + params.id)
       .then((res) => {
       this.setState({
         businessData: res.data.id === params.id ? res.data : {},
@@ -48,7 +48,7 @@ class Business extends Component {
       });
       console.log(res.data)
     }).catch((err) => this.setState({err: true}))
-    
+
     let db = firebase.database()
     db.ref(params.id + '/reviews').once('value', (ss) => {
       let arr = []
@@ -60,7 +60,7 @@ class Business extends Component {
         recentReviews: arr
       })
     })
-    
+
   }
   // converts military time
   _parseTime = (x) => {
@@ -128,7 +128,21 @@ class Business extends Component {
       )
     })
   }
-  
+  renderRadios = (amount) => {
+    let arr = new Array(amount).fill(true)
+    return arr.map((radio, i) => {
+      let j = ++i
+      return (
+        <div className="radio">
+          <label>
+            <input className='review-radio' type="radio" value={'kelp-rating-' + j} checked={this.state.kelpRating === ("kelp-rating-" + j)} onChange={(e) => this.setState({ kelpRating: e.target.value })} required/>
+            {i + 1}
+          </label>
+        </div>
+      )
+    })
+  }
+
   renderReviews = () => {
     return this.state.recentReviews.map((review, i) => {
       return <li key={i} className="list-group-item">{review.review}</li>
@@ -234,41 +248,7 @@ class Business extends Component {
           <div className='leave-review-section row justify-content-center'>
             <form className='form-group' onSubmit={(e) => this.handleReviewSubmit(e)}>
               <div className="row justify-content-center">
-                <div className="radio">
-                  <label>
-                    <input className='review-radio' type="radio" value='kelp-rating-1' checked={this.state.kelpRating === "kelp-rating-1"} onChange={(e) => this.setState({ kelpRating: e.target.value })} required/>
-                    1
-                  </label>
-                </div>
-                <div className="radio">
-                  <label>
-                    <input className='review-radio' type="radio" value='kelp-rating-2' checked={this.state.kelpRating === "kelp-rating-2"} onChange={(e) => this.setState({ kelpRating: e.target.value })}/>
-                    2
-                  </label>
-                </div>
-
-                <div className="radio">
-                  <label>
-                    <input className='review-radio' type="radio" value='kelp-rating-3' checked={this.state.kelpRating === "kelp-rating-3"} onChange={(e) => this.setState({ kelpRating: e.target.value })}/>
-                    3
-                  </label>
-                </div>
-
-
-                <div className="radio">
-                  <label>
-                    <input className='review-radio' type="radio" value='kelp-rating-4' checked={this.state.kelpRating === "kelp-rating-4"} onChange={(e) => this.setState({ kelpRating: e.target.value })}/>
-                    4
-                  </label>
-                </div>
-
-                <div className="radio">
-                  <label>
-                    <input className='review-radio' type="radio" value='kelp-rating-5' checked={this.state.kelpRating === "kelp-rating-5"} onChange={(e) => this.setState({ kelpRating: e.target.value })}/>
-                    5
-                  </label>
-                </div>
-
+                {this.renderRadios(5)}
               </div>
               <div className="row justify-content-center">
                 <textarea className='review-textarea' onChange={(e)=> this.handleChange(e, 'reviewComment')} value={this.state.reviewComment} required/>
